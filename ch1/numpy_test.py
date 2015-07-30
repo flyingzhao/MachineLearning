@@ -9,4 +9,4 @@ invRandmat=randmat.I
 print invRandmat
 print invRandmat*randmat
 
-print eye(4)
+print invRandmat*randmat-eye(4)
