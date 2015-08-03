@@ -36,9 +36,12 @@ def chooseBestFeatureToSplit(dataSet):
 	numFeatures=len(dataSet[0])-1
 	baseEntropy=calShannonEnt(dataSet)
 	bestInfoGain=0.0;bestFeature=-1
+	print numFeatures
 	for i in range(numFeatures):
 		featList=[example[i] for example in dataSet]
+		print featList
 		uniqueVals=set(featList)
+		print uniqueVals
 		newEntropy=0.0
 		for value in uniqueVals:
 			subDataSet=splitDataSet(dataSet,i,value)
@@ -48,7 +51,7 @@ def chooseBestFeatureToSplit(dataSet):
 		if (infoGain>bestInfoGain):
 			bestInfoGain=infoGain
 			bestFeature=i
-		return bestFeature
+	return bestFeature
 
 
 myDat,labels=createDataSet()
