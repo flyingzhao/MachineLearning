@@ -15,8 +15,7 @@ def calShannonEnt(dataSet):
 	return shannonEnt
 
 def createDataSet():
-	dataSet=[[1,1,'maybe'],
-		[1,1,'yes'],
+	dataSet=[[1,1,'yes'],
 		[1,1,'yes'],
 		[1,0,'no'],
 		[0,1,'no'],
@@ -24,7 +23,39 @@ def createDataSet():
 	labels=['no surfing','flippers']
 	return dataSet,labels
 
+def splitDataSet(dataSet,axis,value):
+	retDataSet=[]
+	for featVec in dataSet:
+		if featVec[axis]==value:
+			reducedFeatVec=featVec[:axis]
+			reducedFeatVec.extend(featVec[axis+1:])
+			retDataSet.append(reducedFeatVec)
+	return retDataSet
+
+def chooseBestFeatureToSplit(dataSet):
+	numFeatures=len(dataSet[0])-1
+	baseEntropy=calShannonEnt(dataSet)
+	bestInfoGain=0.0;bestFeature=-1
+	for i in range(numFeatures):
+		featList=[example[i] for example in dataSet]
+		uniqueVals=set(featList)
+		newEntropy=0.0
+		for value in uniqueVals:
+			subDataSet=splitDataSet(dataSet,i,value)
+			prob=len(subDataSet)/float(len(dataSet))
+			newEntropy+=prob*calShannonEnt(subDataSet)
+		infoGain=baseEntropy-newEntropy
+		if (infoGain>bestInfoGain):
+			bestInfoGain=infoGain
+			bestFeature=i
+		return bestFeature
+
+
 myDat,labels=createDataSet()
 ent=calShannonEnt(myDat)
+ret=splitDataSet(myDat,1,1)
 print myDat
 print ent
+print ret
+bestFe=chooseBestFeatureToSplit(myDat)
+print bestFe
