@@ -1,4 +1,5 @@
 from math import log
+import operator
 
 def calShannonEnt(dataSet):
 	numEntries=len(dataSet)
@@ -36,12 +37,12 @@ def chooseBestFeatureToSplit(dataSet):
 	numFeatures=len(dataSet[0])-1
 	baseEntropy=calShannonEnt(dataSet)
 	bestInfoGain=0.0;bestFeature=-1
-	print numFeatures
+	# print numFeatures
 	for i in range(numFeatures):
 		featList=[example[i] for example in dataSet]
-		print featList
+		# print featList
 		uniqueVals=set(featList)
-		print uniqueVals
+		# print uniqueVals
 		newEntropy=0.0
 		for value in uniqueVals:
 			subDataSet=splitDataSet(dataSet,i,value)
@@ -53,12 +54,55 @@ def chooseBestFeatureToSplit(dataSet):
 			bestFeature=i
 	return bestFeature
 
+def majorityCnt(classList):
+	classCount={}
+	for vote in classList:
+		if vote not in classCount.keys():
+			classCount[vote]=0
+		classCount[vote]+=1
+	sortedClassCount=sorted(classCount.iteritems,key=operator.itemgetter(1),reverse=True)
+	return sortedClassCount[0][0]
+
+def createTree(dataSet,labels):
+	classList=[example[-1] for example in dataSet]
+	if classList.count(classList[0])==len(classList):
+		return classList[0]
+	if len(dataSet[0])==1:
+		return majorityCnt(classList)
+	bestFeat=chooseBestFeatureToSplit(dataSet)
+	bestFeatLabel=labels[bestFeat]
+	myTree={bestFeatLabel:{}}
+	del(labels[bestFeat])
+	featValues=[example[bestFeat] for example in dataSet]
+	uniqueVals=set(featValues)
+	for value in uniqueVals:
+		subLabels=labels[:]
+		myTree[bestFeatLabel][value]=createTree(splitDataSet(dataSet,bestFeat,value),subLabels)
+	return myTree
+
+def classify(inputTree,featLabels,testVec):
+	firstStr=inputTree.keys()[0]
+	secondDict=inputTree[firstStr]
+	featIndex=featLabels.index(firstStr)
+	for key in secondDict.keys():
+		if testVec[featIndex]==key:
+			if type(secondDict[key]).__name__=='dict':
+				classLabel=classify(secondDict[key],featLabels,testVec)
+			else:classLabel=secondDict[key]
+	return classLabel
+
+
 
 myDat,labels=createDataSet()
-ent=calShannonEnt(myDat)
-ret=splitDataSet(myDat,1,1)
-print myDat
-print ent
-print ret
-bestFe=chooseBestFeatureToSplit(myDat)
-print bestFe
+# ent=calShannonEnt(myDat)
+# ret=splitDataSet(myDat,1,1)
+# print myDat
+# print ent
+# print ret
+# bestFe=chooseBestFeatureToSplit(myDat)
+# print bestFe
+myTree=createTree(myDat,labels)
+print myTree
+labels=['no surfing','flippers']
+labe=classify(myTree,labels,[0,1])
+print labe
