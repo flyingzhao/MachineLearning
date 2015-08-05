@@ -84,6 +84,7 @@ def classify(inputTree,featLabels,testVec):
 	firstStr=inputTree.keys()[0]
 	secondDict=inputTree[firstStr]
 	featIndex=featLabels.index(firstStr)
+	print featIndex
 	for key in secondDict.keys():
 		if testVec[featIndex]==key:
 			if type(secondDict[key]).__name__=='dict':
@@ -91,6 +92,16 @@ def classify(inputTree,featLabels,testVec):
 			else:classLabel=secondDict[key]
 	return classLabel
 
+def storeTree(inputTree,filename):
+	import pickle
+	fw=open(filename,'w')
+	pickle.dump(inputTree,fw)
+	fw.close()
+
+def grabTree(filename):
+	import pickle
+	fr=open(filename)
+	return pickle.load(fr)
 
 
 myDat,labels=createDataSet()
@@ -102,7 +113,15 @@ myDat,labels=createDataSet()
 # bestFe=chooseBestFeatureToSplit(myDat)
 # print bestFe
 myTree=createTree(myDat,labels)
+storeTree(myTree,'myTree.txt')
 print myTree
 labels=['no surfing','flippers']
-labe=classify(myTree,labels,[0,1])
+labe=classify(myTree,labels,[1,1])
 print labe
+
+
+# fr=open('lenses.txt')
+# lenses=[inst.strip().split('\t') for inst in fr.readlines()]
+# lensesLabels=['age','prescript','astigmatic','tearRate']
+# lenses=createTree(lenses,lensesLabels)
+# print lenses

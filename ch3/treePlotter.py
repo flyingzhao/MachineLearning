@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from trees import *
+
 
 decisionNode=dict(boxstyle="sawtooth",fc="0.8")
 leafNode=dict(boxstyle="round4",fc="0.8")
@@ -80,10 +82,18 @@ def createPlot(inTree):
 	
 
 # createPlot()
-tree=retrieveTree(1)
-print tree
-a=getTreeDepth(tree)
-print a
-b=getNumLeafs(tree)
-print b
-createPlot(tree)
+# tree=retrieveTree(1)
+# print tree
+# a=getTreeDepth(tree)
+# print a
+# b=getNumLeafs(tree)
+# print b
+# createPlot(tree)
+
+
+fr=open('lenses.txt')
+lenses=[inst.strip().split('\t') for inst in fr.readlines()]
+lensesLabels=['age','prescript','astigmatic','tearRate']
+lenses=createTree(lenses,lensesLabels)
+print lenses
+createPlot(lenses)
