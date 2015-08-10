@@ -13,13 +13,13 @@ def distEclud(vecA,vecB):
 	return sqrt(sum(power(vecA-vecB,2)))
 
 def randCent(dataSet,k):
-	dataSet=mat(dataSet)
+	#dataSet=mat(dataSet)
 	n=shape(dataSet)[1]
 	centroids=mat(zeros((k,n)))
 	for j in range(n):
 		minJ=min(dataSet[:,j])
 		rangeJ=float(max(dataSet[:,j])-minJ)
-		centroids[:,j]=minJ+rangeJ*random.rand(k,1)
+		centroids[:,j]=mat(minJ+rangeJ*random.rand(k,1))
 		# print centroids
 	return centroids
 
@@ -71,10 +71,10 @@ def biKmeans(dataSet,k,distMeans=distEclud):
 		bestClustAss[nonzero(bestClustAss[:,0].A==0)[0],0]=bestCentToSplit
 		print 'the bestCentToSplit is',bestCentToSplit
 		print 'the len of bestClustAss is',len(bestClustAss)
-		centList[bestCentToSplit]=bestNewCents[0,:]
-		centList.append(bestNewCents[1,:])
-		clusterAssment[nonzero(clusterAssment[:,0].A==bestCentToSplit)[0],:]=bestClustAss
-	return centList,clusterAssment
+		centList[bestCentToSplit]=bestNewCents[0,:].tolist()[0]
+		centList.append(bestNewCents[1,:].tolist()[0])
+		clusterAssment[nonzero(clusterAssment[:,0].A == bestCentToSplit)[0],:]= bestClustAss
+	return mat(centList),clusterAssment
 
 			
 
